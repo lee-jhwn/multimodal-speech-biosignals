@@ -28,12 +28,7 @@ The dataset is **gated**. You will be asked to accept a responsible-use licence 
 download, because the data is single-subject and contains the participant's voice and
 real-time MRI of their head and vocal tract, and so is not anonymous.
 
-```
-https://huggingface.co/datasets/<ORG_OR_USER>/multimodal-speech-biosignals
-```
-
-> **TODO before publication:** create the Hugging Face dataset repository, enable gating,
-> and replace the URL above.
+https://huggingface.co/datasets/lee-jhwn/multimodal-speech-biosignals
 
 ## Code
 
