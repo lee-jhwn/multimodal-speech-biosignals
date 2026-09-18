@@ -35,7 +35,7 @@ ships with the dataset.
 ```bibtex
 @article{lee2026approach,
   title={An Approach to Simultaneous Acquisition of Real-Time MRI Video, EEG, and Surface EMG for Articulatory, Brain, and Muscle Activity During Speech Production},
-  author={Lee, Jihwan and Razmara, Parsa and Huang, Kevin and Foley, Sean and Kommineni, Aditya and Hsu, Haley and Jeong, Woojae and Kumar, Prakash and Shi, Xuan and Lee, Yoonjeong and others},
+  author={Lee, Jihwan and Razmara, Parsa and Huang, Kevin and Foley, Sean and Kommineni, Aditya and Hsu, Haley and Jeong, Woojae and Kumar, Prakash and Shi, Xuan and Lee, Yoonjeong and Feng, Tiantian and Medani, Takfarinas and Tian, Ye and Kadiri, Sudarsana Reddy and Nayak, Krishna S. and Byrd, Dani and Goldstein, Louis and Leahy, Richard M. and Narayanan, Shrikanth},
   journal={Interspeech 2026},
   year={2026}
 }
