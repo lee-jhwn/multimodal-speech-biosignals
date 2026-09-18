@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Split this release into one EEG array (and one rtMRI video clip) per phoneme.
+"""Split this release into one EEG array (and one rtMRI video clip) per stimulus.
 
 Nothing here ships pre-segmented: run this to generate the segments yourself.
 
-For every recording the script epochs the CCA-cleaned EEG on the production triggers
+For every recording the script epochs the EEG on the production triggers
 and writes each epoch as a .npy array. For in-scanner recordings it also cuts the
 matching window out of the rtMRI video, so clip and array cover the same interval.
 
-    python split_per_phoneme.py --out-dir ./segments
+    python split_per_stimulus.py --out-dir ./segments
 
 Outputs, under --out-dir:
 
@@ -16,11 +16,11 @@ Outputs, under --out-dir:
     segments.csv                                           one row per segment
     channels.txt                                           channel order for every .npy
 
-EEG processing mirrors align_eeg_mri.py, the script that produced the released epoch
-pickles: EOG/EMG/ECG channels typed, standard_1020 montage, 0.1-30 Hz band-pass,
-mastoid (M1/M2) reference, epochs at tmin/tmax with a (-0.2, 0) baseline.
+EEG processing: EOG/EMG/ECG channels typed, standard_1020 montage, 0.1-30 Hz band-pass,
+mastoid (M1/M2) reference, epochs at tmin/tmax with a (-0.2, 0) baseline. These defaults
+reproduce the epoching used in the paper.
 
-EEG-to-video alignment is END-ALIGNED, following compose_trigger57_topomap_video.py:
+EEG-to-video alignment is END-ALIGNED:
 the scanner writes one 'Volume' marker per acquired MRI volume, and the video ends with
 the last volume, so a trigger sitting `delta` seconds before the last Volume marker sits
 `video_duration - delta` seconds into the video. Clock drift between the EEG amplifier
@@ -38,15 +38,15 @@ Note that `--stage raw` data is 5000 Hz and unreferenced, so segments from it ar
 trigger-recovered, so segment counts match the protocol either way.
 
 Checked against the release (see code/README.md): the EEG segments reproduce the
-project's own epoch pickles to float64 noise, and across all 216 in-scanner phonated
-trials the clip audio peaks 0.997 +/- 0.159 s after the production trigger, which is
-where the spoken syllable belongs.
+project's own epoching to float64 noise, and across all 216 in-scanner phonated trials
+the clip audio peaks 0.997 +/- 0.159 s after the production trigger, which is where the
+spoken syllable belongs.
 
 One caveat on the video end-alignment: the video stream runs ~8 frames (~0.08 s) longer
-than the mview ROI traces the released pickles were cut against, so clips sit ~0.08 s
-later than the pickled ROI windows. That is well inside the spread of production onsets
-and does not affect ordinary use, but it matters if you align clips against those ROI
-traces sample-for-sample.
+than the rtMRI articulator ROI traces derived from the same acquisition, so clips sit
+~0.08 s later than windows cut against those traces. That is well inside the spread of
+production onsets and does not affect ordinary use, but it matters if you align clips
+against ROI traces sample-for-sample.
 
 Requires: mne, numpy, pandas, and ffmpeg on PATH for video/audio cutting.
 """
@@ -76,7 +76,7 @@ CONTEXTS = {
 
 def parse_args():
     p = argparse.ArgumentParser(
-        description="Split released EEG and rtMRI video into per-phoneme segments.",
+        description="Split released EEG and rtMRI video into per-stimulus segments.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     here = os.path.dirname(os.path.abspath(__file__))

@@ -34,28 +34,19 @@ https://huggingface.co/datasets/lee-jhwn/multimodal-speech-biosignals
 
 ```
 code/
-├── split_per_phoneme.py                 split EEG into per-phoneme .npy + cut rtMRI clips
-├── align_eeg_mri.py                     (verbatim) produced the released epoch pickles
-├── recover_from_log.py                  (verbatim) reconstructs lost stimulus triggers
-├── map_eeg_mri.py                       (verbatim) recording↔scanner-video map, drift QC
-├── compose_trigger57_topomap_video.py   (verbatim) figure script; source of video timing
-└── README.md                            what each script does, and what will not run as-is
+├── split_per_stimulus.py   split EEG into per-stimulus .npy + cut matching rtMRI clips
+└── README.md               options, alignment rationale, verification, caveats
 ```
-
-`split_per_phoneme.py` is the one to run. The four scripts marked *verbatim* are the
-original analysis scripts, copied unmodified for provenance; two of them have known traps
-(a missing import, and a module-level call that overwrites a directory). All of this is
-documented in [`code/README.md`](code/README.md) — read it before running anything.
 
 ### Quick start
 
 ```sh
 pip install mne numpy pandas          # plus ffmpeg on PATH for video cutting
 # from inside the downloaded dataset directory:
-python code/split_per_phoneme.py --out-dir ./segments
+python code/split_per_stimulus.py --out-dir ./segments
 ```
 
-This writes one `.npy` EEG array and one rtMRI video clip per phoneme, plus a
+This writes one `.npy` EEG array and one rtMRI video clip per stimulus, plus a
 `segments.csv` of labels and timings. Defaults reproduce the epoching used in the paper:
 production triggers, -1.2 to +2.0 s, baseline (-0.2, 0), 0.1-30 Hz, mastoid reference.
 
