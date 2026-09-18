@@ -8,7 +8,7 @@ The dataset is on the Hugging Face Hub:
 
 https://huggingface.co/datasets/lee-jhwn/multimodal-speech-biosignals
 
-It covers 18 VCV syllables produced three ways — spoken, silently articulated, and
+It covers 18 VCV stimuli produced three ways — spoken, silently articulated, and
 imagined — recorded both inside the MRI scanner (with simultaneous rtMRI, EEG, EMG, and audio)
 and outside it as an EEG reference. EEG is 15 channels including three surface EMG.
 
