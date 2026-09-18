@@ -41,7 +41,7 @@ code/
 ### Quick start
 
 ```sh
-pip install mne numpy pandas          # plus ffmpeg on PATH for video cutting
+pip install mne numpy                 # plus ffmpeg on PATH for video cutting
 # from inside the downloaded dataset directory:
 python code/split_per_stimulus.py --out-dir ./segments
 ```

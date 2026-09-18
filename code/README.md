@@ -15,6 +15,7 @@ want.
 python split_per_stimulus.py --out-dir ./segments          # everything
 python split_per_stimulus.py --out-dir ./segments --contexts in_scanner --no-video
 python split_per_stimulus.py --out-dir ./segments --tmin -0.5 --tmax 1.5 --dry-run
+python split_per_stimulus.py --out-dir ./segments --band 1 40 --reference none
 ```
 
 Writes, under `--out-dir`:
@@ -31,8 +32,12 @@ Defaults reproduce the epoching used in the paper: production triggers (41-58),
 `standard_1020` montage, EOG/EMG/ECG channels typed. At those defaults each EEG segment is
 `(15, 801)` at 250 Hz and each clip is 317 frames at 99.01 fps — the same 3.204 s window.
 
-Requires `mne`, `numpy`, `pandas`, and `ffmpeg` on `PATH` (only for video; `--no-video`
+Requires `mne` and `numpy`, plus `ffmpeg` on `PATH` for video cutting (`--no-video`
 drops that dependency).
+
+Window and preprocessing are all flags: `--tmin/--tmax`, `--baseline START END`,
+`--band LOW HIGH` (`0 0` to skip filtering), `--reference CH... | none`, `--stage`,
+`--contexts`, `--conditions`, `--no-video`, `--dry-run`.
 
 ### How EEG and video are aligned
 
@@ -59,8 +64,9 @@ to ~100 ms by the end of a run, because the EEG amplifier and scanner clocks dri
    derived from the same acquisition, so clips sit ~0.08 s later than windows cut against
    those traces. Well inside the spread of production onsets, but it matters if you are
    aligning clips against ROI traces sample-for-sample.
-2. Clips are re-encoded (`mpeg4`, `-q:v 3`) for frame accuracy. `--video-codec copy` is
-   much faster but cuts only on keyframes, so the window will be off.
+2. Clips are re-encoded (`mpeg4`, `-q:v 3`) so the cut is frame-accurate. Stream-copying
+   instead would be faster but cuts only on keyframes, putting the window off by up to a
+   keyframe interval.
 3. `--stage raw` data is 5000 Hz and unreferenced, so its segments are `(15, 16001)` at
    the default window, not `(15, 801)`. Outside-scanner EEG is released at the raw stage
    only, so use `--stage raw` for it.
