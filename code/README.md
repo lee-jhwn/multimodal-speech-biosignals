@@ -71,14 +71,13 @@ run, because the EEG amplifier and scanner clocks drift apart.
    against the ROI traces sample-for-sample.
 2. Clips are re-encoded (`mpeg4`, `-q:v 3`) for frame accuracy. `--video-codec copy` is
    much faster but cuts only on keyframes, so the window will be off.
-3. `--stage raw` and `--stage magnetic_denoised` are 5000 Hz and unreferenced, so their
-   segments are `(15, 16001)` at the default window, not `(15, 801)`.
-   `magnetic_denoised` exists for in-scanner phonated only. Outside-scanner EEG is
-   released at the raw stage only, so use `--stage raw` for it.
+3. `--stage raw` data is 5000 Hz and unreferenced, so its segments are `(15, 16001)` at
+   the default window, not `(15, 801)`. Outside-scanner EEG is released at the raw stage
+   only, so use `--stage raw` for it.
 4. **Raw-stage segment counts are lower than the protocol implies**, because the raw
    stage carries the original markers rather than the recovered ones. Outside-scanner
    `imagine_2`, for instance, yields 8 segments instead of 9. The released
-   `cca_denoised` stage is trigger-recovered; the raw stage is not.
+   `denoised` stage is trigger-recovered; the raw stage is not.
 5. Trigger codes absent from a recording are skipped silently; windows that would run off
    the end of a recording are skipped with a printed notice.
 
@@ -103,7 +102,7 @@ working directory. `split_per_phoneme.py` covers the EEG side without any of tha
 
 Matches each recording's surviving trigger sequence against the presentation logs, fits a
 linear regression from log time to EEG time, and writes predicted onsets for the missing
-triggers. This produced the recovered triggers in `eeg/cca_denoised/`.
+triggers. This produced the recovered triggers in `eeg/denoised/`.
 
 **Caveat:** it has a live `save_recovered_files(...)` call at module level, so importing
 it executes that call and overwrites an output directory. Strip the usage calls at the

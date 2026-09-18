@@ -30,7 +30,7 @@ avoids that.
 Outside-scanner recordings have no MRI, hence no video and no Volume markers, so they
 produce EEG arrays only. Those runs used a shorter 9-syllable protocol (codes 41-49),
 so they yield 9 segments per recording rather than 18. They are released at the raw
-stage only, so segmenting them needs `--stage raw`; the default `cca_denoised` stage
+stage only, so segmenting them needs `--stage raw`; the default `denoised` stage
 covers in-scanner recordings and skips outside-scanner ones.
 
 Note that `--stage raw` data is 5000 Hz and unreferenced, so segments from it are
@@ -83,8 +83,8 @@ def parse_args():
                    help="Release root (the directory holding eeg/, video_with_audio/).")
     p.add_argument("--out-dir", default=os.path.join(os.getcwd(), "segments"),
                    help="Where to write segments. Created if absent.")
-    p.add_argument("--stage", default="cca_denoised",
-                   choices=["cca_denoised", "magnetic_denoised", "raw"],
+    p.add_argument("--stage", default="denoised",
+                   choices=["denoised", "raw"],
                    help="Which EEG processing stage to segment.")
     p.add_argument("--contexts", nargs="+", default=list(CONTEXTS),
                    choices=list(CONTEXTS))
@@ -128,8 +128,7 @@ def stage_dir(release_root, stage, context, condition):
 def recording_id(vhdr_name):
     """Strip the BrainVision extension and any processing suffix."""
     base = os.path.splitext(os.path.basename(vhdr_name))[0]
-    for suffix in ("_CCA_Cleaned", "_Pulse Artifact Correction--withEMGEOGcbcorrected",
-                   "_Pulse Artifact Correction-withEMGEOGcbcorrected"):
+    for suffix in ("_CCA_Cleaned",):
         if base.endswith(suffix):
             base = base[: -len(suffix)]
             break
