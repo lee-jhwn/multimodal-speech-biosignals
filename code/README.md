@@ -10,6 +10,7 @@ working tree rather than this layout, and several parts will not run as-is.
 | Script | |
 |---|---|
 | `split_per_phoneme.py` | **Splits EEG into per-phoneme `.npy` arrays and cuts matching rtMRI video clips.** Written for this release; runs against this layout |
+| `recover_raw_triggers.py` | Recovers lost stimulus triggers into the `.vmrk` marker files, leaving signal files byte-identical. Written for this release; already applied to the shipped data |
 | `align_eeg_mri.py` | verbatim — produced the released epoch pickles (EEG + rtMRI ROI traces) |
 | `recover_from_log.py` | verbatim — reconstructs stimulus triggers from the presentation logs |
 | `map_eeg_mri.py` | verbatim — recording-to-scanner-video mapping, EEG/video drift QC |
@@ -74,10 +75,8 @@ run, because the EEG amplifier and scanner clocks drift apart.
 3. `--stage raw` data is 5000 Hz and unreferenced, so its segments are `(15, 16001)` at
    the default window, not `(15, 801)`. Outside-scanner EEG is released at the raw stage
    only, so use `--stage raw` for it.
-4. **Raw-stage segment counts are lower than the protocol implies**, because the raw
-   stage carries the original markers rather than the recovered ones. Outside-scanner
-   `imagine_2`, for instance, yields 8 segments instead of 9. The released
-   `denoised` stage is trigger-recovered; the raw stage is not.
+4. Both released stages are trigger-recovered, so segment counts match the protocol:
+   18 per in-scanner run, 9 per outside-scanner run.
 5. Trigger codes absent from a recording are skipped silently; windows that would run off
    the end of a recording are skipped with a printed notice.
 
@@ -121,3 +120,33 @@ A talk-figure script: cuts one hardcoded trigger's window from one recording's v
 composites it beside ERP topomaps, needing a precomputed grand-average `.fif`. Included
 because its `parse_vmrk_positions` and end-aligned timing logic is where
 `split_per_phoneme.py`'s video alignment comes from.
+
+## `recover_raw_triggers.py`
+
+Reconstructs stimulus triggers dropped by the acquisition system and writes them into the
+BrainVision `.vmrk` marker files. **It has already been run on the data in this release**;
+it ships so the procedure is inspectable and repeatable, not because you need to run it.
+
+```sh
+python recover_raw_triggers.py --dry-run     # report what it would add
+python recover_raw_triggers.py               # apply
+```
+
+Per recording it reads the existing stimulus markers in position order, walks them against
+that recording's own presentation log (the syllable order is randomised per run, so the
+sequences align unambiguously), least-squares fits log time onto marker position, and
+inserts a marker at the predicted position for every log event with no marker. Markers are
+then renumbered and the file rewritten with its original CRLF line endings. It refuses to
+write if the fit is worse than `--min-r2` (default 0.9999) or if a predicted position
+falls outside the recording.
+
+The important difference from `recover_from_log.py` is that this touches **only** the
+marker file. `recover_from_log.py` re-exports the whole recording through MNE, whose
+BrainVision writer emits IEEE_FLOAT_32 — fine for the already-float `denoised` stage, but
+it would have converted the INT_16 raw recordings, doubled their size and rescaled their
+values. Data labelled raw should stay exactly as recorded, so the `.eeg` and `.vhdr` files
+are never opened for writing; this was verified by checksumming all 104 of them before and
+after.
+
+Applied to this release: 158 markers added across 44 of 52 recordings, every fit at
+r^2 = 1.000000. See the release README for the validation results.

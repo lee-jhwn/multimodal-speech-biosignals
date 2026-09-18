@@ -34,7 +34,8 @@ stage only, so segmenting them needs `--stage raw`; the default `denoised` stage
 covers in-scanner recordings and skips outside-scanner ones.
 
 Note that `--stage raw` data is 5000 Hz and unreferenced, so segments from it are
-(15, 16001) at default window rather than (15, 801).
+(15, 16001) at the default window rather than (15, 801). Both released stages are
+trigger-recovered, so segment counts match the protocol either way.
 
 Checked against the release (see code/README.md): the EEG segments reproduce the
 project's own epoch pickles to float64 noise, and across all 216 in-scanner phonated
