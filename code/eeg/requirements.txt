@@ -1,0 +1,6 @@
+mne==1.11.0
+numpy==2.0.2
+scipy==1.16.3
+scikit-learn==1.6.1
+matplotlib==3.10.0
+pybv==0.7.6
