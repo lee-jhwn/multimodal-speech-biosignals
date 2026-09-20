@@ -25,6 +25,9 @@ python code/split_per_stimulus.py --out-dir ./segments
 Run it from inside the downloaded dataset directory. Defaults match the paper. See
 [`code/README.md`](code/README.md) for the options.
 
+`code/eeg/` has the EEG/EMG artifact removal and its evaluation.
+See [`code/eeg/README.md`](code/eeg/README.md).
+
 ## License
 
 The code here is MIT (`LICENSE`). The data has its own, more restrictive license, which
