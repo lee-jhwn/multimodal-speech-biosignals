@@ -58,6 +58,4 @@ Each script runs in a few minutes on a laptop.
 ## Notes
 
 - Trigger codes: 21–38 mark word onset, 41–58 the go cue. phoneme_class.txt maps each go-cue code (produce_idx) to its syllable and phonetic class.
-- `evaluate_mr_correction.py` uses epochs from −1 to 1 s around word onset, baseline −1 to 0 s, a 0.1 Hz high-pass and the recording reference. Its spectra are computed from the grand-average ERP.
-- `evaluate_cca.py` uses epochs from −1.2 to 2 s around the go cue, baseline −0.2 to 0 s, a 0.1–30 Hz band-pass and the linked-mastoid reference.
 - `cca_denoise.py --auto` applies the 0.4 threshold without the manual choices.
