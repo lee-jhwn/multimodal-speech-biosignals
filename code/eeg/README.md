@@ -47,11 +47,11 @@ python evaluate_mr_correction.py $D/raw/in_scanner/phonated \
 python evaluate_cca.py $D/mr_corrected/in_scanner/phonated $D/denoised/in_scanner/phonated
 ```
 
-| Script | Output | Paper |
-|---|---|---|
-| `cca_denoise.py` | `out/cca/`: cleaned runs, `cca_log.csv` | Sec. 2.4 |
-| `evaluate_mr_correction.py` | `out/mr_correction/`: ERPs and spectra, `erp_correlation.csv` | Sec. 3.3, Fig. 4 |
-| `evaluate_cca.py` | `out/cca_evaluation/`: ERPs and scalp maps, `peak_amplitude.json` | Sec. 3.4, Fig. 5 |
+| Script | Output |
+|---|---|
+| `cca_denoise.py` | `out/cca/`: cleaned runs, `cca_log.csv` |
+| `evaluate_mr_correction.py` | `out/mr_correction/`: ERPs and spectra, `erp_correlation.csv` |
+| `evaluate_cca.py` | `out/cca_evaluation/`: ERPs and scalp maps, `peak_amplitude.json` |
 
 Each script runs in a few minutes on a laptop.
 
